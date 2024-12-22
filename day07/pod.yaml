@@ -1,0 +1,15 @@
+# this is a sample pod yaml
+
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: nginx-pod-another
+  labels:
+    env: demo
+    type: frontend
+spec:
+  containers:
+  - name: nginx-container-latest
+    image: nginx:latest
+    ports: 
+    - containerPort: 80
