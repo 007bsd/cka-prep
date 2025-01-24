@@ -1,20 +1,19 @@
 # cka-prep
 
-## build/tag/push docker with name in the current directory with Dockerfile
+* build/tag/push docker with name in the current directory with Dockerfile
 $ docker build -t {imagename}.
 $ docker tag {src} {destination}
 $ docker push {dockerhubusername}/{dockerimage:tagname}
 
-## To run with detach mode and destinated port
+* To run with detach mode and destinated port
 $ docker run -dp {3000:3000} {dockerimage}
 
-## To getinto the container with interactive mode
+* To getinto the container with interactive mode
 $  docker exec -it {containername} sh
 
 Multi-staged build in docker:
 
 * AS installer --> 
-
 creating a kind cluster:
 
  $ kind create cluster --image=kindest/node:v1.29.12@sha256:62c0672ba99a4afd7396512848d6fc382906b8f33349ae68fb1dbfe549f70dec --name cka-cluster1
@@ -25,7 +24,7 @@ $ kind get clusters
 $ kind delete --name <cluster-name>
 $ kind create cluster --name <cluster-name> --config <cluster-name>.yaml
  
- # three node (two workers) cluster config
+* Three node (two workers) cluster config
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
@@ -37,13 +36,13 @@ kind create cluster --image=kindest/node:v1.29.12@sha256:62c0672ba99a4afd7396512
 
 $ kubectl get nodes
 
-# check the status of the master and worker nodes
+* check the status of the master and worker nodes
 $ kubectl config get-contexts
-# change the context 
-$ kubectl config use-context my-cluster-name
+* change the context 
+$ kubectl config use-context {my-cluster-name}
 
 # kubernatis docs and kubernatis blogs are sub domain in the exam
-#### How to create pods
+* How to create pods
 - Imperative
 $ kubectl run pods
 
@@ -68,11 +67,11 @@ $ kubectl get pods -o wide ( extended information about the pods, like ip)
 $ kubectl get node -o wide
 
 ## Day 08
-# replication centre / replication set / deployment
+* replication centre / replication set / deployment
 $ kubectl get rc ( replication centre: legacy version)
 $ kubctl get rs ( replication set: latest)
 
-# To scale the replicas in imperative way
+* To scale the replicas in imperative way
 $ kubectl scale --replicas=10 rs/{replicaset-name}
 
 $ kubectl get deploy (s/ReplicaSet/Deployment/g)
@@ -80,7 +79,8 @@ $ kubectl get all ( to get all the info)
 $ kubectl set image deploy/nginx-deployment nginx=nginx:1.9.1 ( to set the image to a version)
 $ kubectl rollout history deployment/nginx-deployment ( to check the deployment history)
 $ kubectl rollout undo deployment/nginx-deployment ( to roll back to the last rev)
-# imperative way deployment
+
+### imperative way deployment
 $ kubectl create deploy deploy-nginx-new --image=nginx --dry-run=client -o yaml > imperative-deploy.yaml
 
 ## Day09 services
@@ -105,4 +105,23 @@ $ kubectl scale replics={numberofreplicas}
 $ kubectl expose deploy/{nameofthedeployment} --name=service-port --port -n=demo 
 * find the domain name from /etc/resolve.conf and then do the curl for service name
 * Using fully qualified domain name
+
+## Multi-container pods
+* can have multiple init containers
+$ kubectl apply -f pod-multicontainer.yaml
+
+* create deploy and expose nginx
+$ kubectl create deploy nginx-deploy --image nginx --port 80
+$ kubectl exposedeploy nginx-deploy --name myservice --port 80
+
+* create deploy and expose reddit
+$ kubectl create deploy mydb --image redis --port 80
+$ kubectl expose deploy mydb --name mydb --port 80
+
+## Daemonset 
+* Daemonset runs on all the available nodes except the control panel node
+$ kubectl get ds -A
+* 5 syntax in a cron job * * * * * --> mins hours dayofthemonth month dayofweek
+* Apart from cron job there is also job which is used when trying to complete the task once
+
 
